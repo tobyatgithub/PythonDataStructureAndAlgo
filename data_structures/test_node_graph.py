@@ -1,4 +1,4 @@
-from .node_graph import Vertex, graph
+from nodeGraph import Vertex, graph
 import pytest
 
 
@@ -35,7 +35,7 @@ def test_vertex_import():
 def test_vertex_print(capsys, vertex1):
     print(vertex1)
     captured = capsys.readouterr()
-    assert 'Vertex A is connected to:' in captured.out
+    assert "Vertex A is connected to:" in captured.out
 
 
 def test_breadthfirstsearch1(capsys, small_graph):
@@ -43,7 +43,7 @@ def test_breadthfirstsearch1(capsys, small_graph):
     small_graph.BreadthFirstSearch(start)
     captured = capsys.readouterr()
     # import pdb; pdb.set_trace()
-    assert 'B A C D E \n' in captured.out
+    assert "B A C D E \n" in captured.out
 
 
 def test_breadthfirstsearch2(capsys, small_graph):
@@ -51,7 +51,7 @@ def test_breadthfirstsearch2(capsys, small_graph):
     small_graph.BreadthFirstSearch(start)
     captured = capsys.readouterr()
     # import pdb; pdb.set_trace()
-    assert 'A B C D E \n' in captured.out
+    assert "A B C D E \n" in captured.out
 
 
 def test_breadthfirstsearch3(capsys, small_graph):
@@ -59,4 +59,4 @@ def test_breadthfirstsearch3(capsys, small_graph):
     small_graph.BreadthFirstSearch(start)
     captured = capsys.readouterr()
     # import pdb; pdb.set_trace()
-    assert 'D E \n' in captured.out
+    assert "D E \n" in captured.out

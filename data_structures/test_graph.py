@@ -1,5 +1,5 @@
 import pytest
-from .graph import Graph
+from graph import Graph
 
 
 @pytest.fixture()
@@ -12,12 +12,12 @@ def graph_empty():
 def graph_one():
     g = Graph()
     g.graph = {
-        'A': {'B': 10},
-        'B': {'A': 5, 'D': 15, 'C': 20},
-        'C': {'E': 1},
-        'D': {'A': 5},
-        'E': {'F': 2, 'B': 4},
-        'F': {'D': 11}
+        "A": {"B": 10},
+        "B": {"A": 5, "D": 15, "C": 20},
+        "C": {"E": 1},
+        "D": {"A": 5},
+        "E": {"F": 2, "B": 4},
+        "F": {"D": 11},
     }
     g._size = 6
     return g
@@ -27,13 +27,13 @@ def graph_one():
 def graph_two():
     g = Graph()
     g.graph = {
-        'A': {'B': 10, 'C': 15},
-        'B': {'D': 15, 'E': 5, 'C': 2},
-        'C': {'F': 50, 'G': 25},
-        'D': {},
-        'E': {'C': 5},
-        'F': {'E': 10},
-        'G': {'F': 20}
+        "A": {"B": 10, "C": 15},
+        "B": {"D": 15, "E": 5, "C": 2},
+        "C": {"F": 50, "G": 25},
+        "D": {},
+        "E": {"C": 5},
+        "F": {"E": 10},
+        "G": {"F": 20},
     }
     g._size = 7
     return g
@@ -52,7 +52,10 @@ def test_pring(capsys, graph_empty):
 def test_print2(capsys, graph_one):
     print(graph_one)
     captured = capsys.readouterr()
-    assert captured.out == f'This is a graph with {graph_one._size} nodes : {graph_one.graph.keys()}\n'
+    assert (
+        captured.out
+        == f"This is a graph with {graph_one._size} nodes : {graph_one.graph.keys()}\n"
+    )
 
 
 def test_has_vert1(graph_empty):
@@ -101,7 +104,7 @@ def test_add_edge1(graph_empty):
 
 def test_add_edge2(graph_one):
     assert graph_one.graph["F"]["D"] == 11
-    graph_one.add_edge("F","D",1)
+    graph_one.add_edge("F", "D", 1)
     assert graph_one.graph["F"]["D"] == 1
 
 
@@ -115,24 +118,24 @@ def test_get_neightbor1(graph_empty):
 
 
 def test_get_neightbor2(graph_one):
-    assert graph_one.get_neighbors("C") == {'E': 1}
+    assert graph_one.get_neighbors("C") == {"E": 1}
 
 
 def test_get_neightbor3(graph_two):
-    assert graph_two.get_neighbors('B') == {'D': 15, 'E': 5, 'C': 2}
+    assert graph_two.get_neighbors("B") == {"D": 15, "E": 5, "C": 2}
 
 
 def test_init_with_iterable():
     test_dict = {
-        'A': {'B': 10},
-        'B': {'A': 5, 'D': 15, 'C': 20},
-        'C': {'E': 1},
-        'D': {'A': 5},
-        'E': {'F': 2, 'B': 4},
-        'F': {'D': 11}
+        "A": {"B": 10},
+        "B": {"A": 5, "D": 15, "C": 20},
+        "C": {"E": 1},
+        "D": {"A": 5},
+        "E": {"F": 2, "B": 4},
+        "F": {"D": 11},
     }
     test_graph = Graph(test_dict)
     assert test_graph
     assert test_graph.has_vert("A")
-    assert test_graph.get_neighbors("C") == {'E': 1}
+    assert test_graph.get_neighbors("C") == {"E": 1}
     assert len(test_graph) == 6
