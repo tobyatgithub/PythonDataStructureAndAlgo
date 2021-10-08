@@ -1,12 +1,12 @@
 from node import Node
 
-class Queue(object):
+
+class _Queue(object):
     """
     Queue is a classic data structure built upon Node. It follows the FIFO rule, such that
     the first element in shall be the first one out. Like a queue in line.
     """
-
-    def __init__(self, iterable = []):
+    def __init__(self, iterable=[]):
         self.front = None
         self.back = None
         self._size = 0
@@ -15,7 +15,9 @@ class Queue(object):
             for i in iterable:
                 self.enqueue(i)
         else:
-            raise TypeError(f'Queue only take <None> or a <list> as input init value, but \n{ type(iterable) } given')
+            raise TypeError(
+                f'Queue only take <None> or a <list> as input init value, but \n{ type(iterable) } given'
+            )
 
     def __len__(self):
         return self._size
@@ -65,7 +67,6 @@ class Queue(object):
         # else: # no need
         #     current._next = None
         return current
-
 
     def peek(self):
         """
