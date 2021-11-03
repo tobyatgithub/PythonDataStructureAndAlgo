@@ -1,11 +1,14 @@
 import sys
 import math
+import numpy as np
 
 sys.path.append(
     "/Users/toby/Documents/PythonWorks/Python_data_structure_and_algo")
 
 import json
 from data_structures.graph import Graph
+
+DEBUG = False
 
 
 def buildTrainRideGraph():
@@ -109,7 +112,7 @@ def buildTrainRideGraph():
 
 
 tmp = buildTrainRideGraph()
-print(json.dumps(tmp.graph, sort_keys=True, indent=4))
+if DEBUG: print(json.dumps(tmp.graph, sort_keys=True, indent=4))
 
 
 def find_index_minValue(all_index_set, seen_index_set, distance_list):
@@ -131,7 +134,7 @@ def find_index_minValue(all_index_set, seen_index_set, distance_list):
     return min_value_index
 
 
-def dijkstra(graph, source="vancouver"):
+def dijkstra(graph, source="vancouver", debug=False):
     """
     Assuming non-negative edges, dijkstra solves the single-source 
     shortest-paths problem on a weighted directed graph.
@@ -166,13 +169,24 @@ def dijkstra(graph, source="vancouver"):
         node_index = find_index_minValue(candidate_index, Seen_index, distance)
         Seen_index.add(node_index)
         node = Q[node_index]
-        print(f"node = {node}")
+        if DEBUG: print(f"node = {node}")
         for v in graph.get_neighbors(node):
-            print(f"examing neighbor of {node} = {v}")
+            if DEBUG: print(f"examing neighbor of {node} = {v}")
             relax(node, v, graph.get_weight(node, v))
-        # break
-    print(distance)
+    if DEBUG: print(distance)
     return distance
 
 
-dijkstra(tmp)
+# dijkstra(tmp, source="vancouver")
+
+# optional
+Q = tmp.get_vertexs()
+cities = set(tmp.get_vertexs())
+for city in cities:
+    tmp_distance = np.array(dijkstra(tmp, source=city))
+    tmp_max = max(tmp_distance)
+    for endCityIndex in np.where(tmp_distance == tmp_max)[0]:
+        print(
+            f"Source={city}, destination={Q[endCityIndex]}, with max distance={tmp_max}."
+        )
+    # break
