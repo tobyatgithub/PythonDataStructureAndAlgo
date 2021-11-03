@@ -6,8 +6,7 @@ class Graph:
     Generally tehre's no limitation on number of nodes, and number of edges.
     Edges can also be weighted or non-weighted.
     """
-
-    def __init__(self, iterable = {}):
+    def __init__(self, iterable={}):
         """
         For here iterable only takes in vertices and weighted edges.
         Right now it only support format as:
@@ -16,46 +15,44 @@ class Graph:
             'B': {'A': 5, 'D': 15, 'C': 20},
             })
         """
-        # import collections
         self.graph = {}
         self._size = 0
-        # if isinstance(iterable, collections.Iterable):
         if isinstance(iterable, dict):
             for v1 in iterable.keys():
-                self.add_vert(v1)
-
-            for v1 in iterable.keys():
+                self.add_vertex(v1)
                 for v2, weight in iterable[v1].items():
                     self.add_edge(v1, v2, weight)
 
+    def add_vertex(self, val):
+        if not self.has_vertex(val):
+            self.graph[val] = {}
+            self._size += 1
+        return self
+
+    def add_edge(self, v1, v2, weight=1):
+        """
+        adding edge from v1 to v2 with given weight.
+        if no weight is imported, it's set to default value 1.
+        """
+        if not self.has_vertex(v2):
+            self.add_vertex(v2)
+        self.graph[v1][v2] = weight
+        return self
+
     def __repr__(self):
         if self._size == 0:
-            return "This is an empty graph."
-        out = f'This is a graph with {self._size} nodes : {self.graph.keys()}'
-        return out
+            print("This is an empty graph.")
+        print(self.graph)
 
     def __str__(self):
         if self._size == 0:
             return "This is an empty graph."
-        out = f'This is a graph with {self._size} nodes : {self.graph.keys()}'
-        return out
+        return str(self.graph)
 
     def __len__(self):
         return self._size
 
-    def add_vert(self, val):
-        """
-        """
-        # add vertice to self.graph
-        # check to see if the vert already exists: if so raise exception
-            # create a helper method
-        if self.has_vert(val):
-            raise Exception(f'Input Value { val } already exists in this graph. Bad Input.')
-        self.graph[val] = {}
-        self._size += 1
-        return self
-
-    def has_vert(self, val):
+    def has_vertex(self, val):
         """
         checks for a key in the graph
         input: self of graph class, and a value to check
@@ -63,27 +60,11 @@ class Graph:
         """
         return val in self.graph.keys()
 
-    def add_edge(self, v1, v2, weight=1):
-        """
-        adding edge from v1 to v2 with given weight.
-        if no weight is imported, it's set to default value 1.
-        """
-        # add a relationship and weight between two verts
-        # don't forget to validate
-        if not self.has_vert(v1):
-            raise Exception(f'Input Value { v1 } does not exist in this graph. Bad Input.')
-        if not self.has_vert(v2):
-            raise Exception(f'Input Value { v2 } does not exist in this graph. Bad Input.')
-
-        v1_edges = self.graph[v1]
-        v1_edges[v2] = weight
-        return self
-
     def get_neighbors(self, val):
         """
         Given a val (key), return all adjacent verts
         """
-        if not self.has_vert(val):
+        if not self.has_vertex(val):
             print(f'Input value {val} is not in this graph.')
-            return None
+            return {}
         return self.graph[val]
