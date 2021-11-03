@@ -49,6 +49,10 @@ class _Heap(object):
 # test = _Heap(DEBUG=True).maxHeapify(array, 0)
 # print(test)
 
+array = [2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15]
+test = _Heap(DEBUG=True).buildMaxHeap(array)
+print(f"A = {test}")
+
 # class maxHeap(object):
 #     """
 #     """
