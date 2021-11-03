@@ -6,7 +6,7 @@ class Graph:
     Generally tehre's no limitation on number of nodes, and number of edges.
     Edges can also be weighted or non-weighted.
     """
-    def __init__(self, iterable={}):
+    def __init__(self, iterable={}, directional=True):
         """
         For here iterable only takes in vertices and weighted edges.
         Right now it only support format as:
@@ -17,6 +17,7 @@ class Graph:
         """
         self.graph = {}
         self._size = 0
+        self.directional = directional
         if isinstance(iterable, dict):
             for v1 in iterable.keys():
                 self.add_vertex(v1)
@@ -34,9 +35,16 @@ class Graph:
         adding edge from v1 to v2 with given weight.
         if no weight is imported, it's set to default value 1.
         """
+        if not self.has_vertex(v1):
+            self.add_vertex(v1)
         if not self.has_vertex(v2):
             self.add_vertex(v2)
+            
         self.graph[v1][v2] = weight
+
+        # if bi-directional, then we also need to add the second direction
+        if not self.directional:
+            self.graph[v2][v1] = weight
         return self
 
     def __repr__(self):
@@ -58,7 +66,13 @@ class Graph:
         input: self of graph class, and a value to check
         output: a boolean value
         """
-        return val in self.graph.keys()
+        return val in self.graph
+
+    def get_vertexs(self):
+        return sorted(list(self.graph.keys()))
+
+    def get_weight(self, fromNode, toNode):
+        return self.graph.get(fromNode, {}).get(toNode)
 
     def get_neighbors(self, val):
         """
