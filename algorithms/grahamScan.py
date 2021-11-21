@@ -1,5 +1,5 @@
 """
-Here we write the code for granham scan, and
+Here we write the code for graham scan, and
 then we try to solve leetcode 587.
 """
 import numpy as np
@@ -83,7 +83,7 @@ def countNumberOfSameCosine(in_array, origin):
     return count
 
 
-def granhamScan(in_array):
+def grahamScan(in_array):
     """
     Input: a list of tuples [(x1, y1), (x2, y2), (x3, y3), ...]
     Output: a list of tuples indicating the boundary points.
@@ -182,10 +182,10 @@ def granhamScan(in_array):
 
 # # test
 # array = [(0, 0), (0, 3), (1, 2), (1, 1), (2, 2), (3, 3), (4, 4), (3, 1)]
-# print(granhamScan(array))
+# print(grahamScan(array))
 
 # array = [[1, 2], [2, 2], [4, 2]]
-# print(granhamScan(array))
+# print(grahamScan(array))
 
 
 def readNumbersFromFile(file_address):
@@ -203,10 +203,10 @@ def readNumbersFromFile(file_address):
     return res
 
 
-array = readNumbersFromFile("granhamLargeInput3.txt")
-output = granhamScan(array)
+array = readNumbersFromFile("grahamLargeInput3.txt")
+output = grahamScan(array)
 print("final result = ", output)
-expected = readNumbersFromFile("granhamLargeExpected3.txt")
+expected = readNumbersFromFile("grahamLargeExpected3.txt")
 
 diff = showDifference(output, expected)
 print(diff[0], "hum0")
