@@ -9,11 +9,11 @@ DEBUG = True
 
 
 def plotAllPoints(in_array):
-    Xs = [_[0] for _ in in_array]
-    Ys = [_[1] for _ in in_array]
+    Xs = [_[0] * 10 for _ in in_array]
+    Ys = [_[1] * 10 for _ in in_array]
     plt.scatter(Xs, Ys)
-    # for i in range(len(Xs)):
-    #     plt.text(Xs[i] + 0.1, Ys[i] - 0.1, f"({Xs[i]}, {Ys[i]})")
+    for i in range(len(Xs)):
+        plt.text(Xs[i] + 0.1, Ys[i] - 0.1, f"({Xs[i]}, {Ys[i]})")
     plt.show()
 
 
