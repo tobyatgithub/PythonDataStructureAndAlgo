@@ -10,49 +10,10 @@ ROUND = 8
 MULTIPLYER = 1000
 
 
-def plotAllPoints(in_array):
-    Xs = [_[0] * 10 for _ in in_array]
-    Ys = [_[1] * 10 for _ in in_array]
-    plt.scatter(Xs, Ys)
-    for i in range(len(Xs)):
-        plt.text(Xs[i] + 0.1, Ys[i] - 0.1, f"({Xs[i]}, {Ys[i]})")
-    plt.show()
-
-
-def showDifference(output, expected):
-    if len(output) > len(expected):
-        longer = output
-        shorter = expected
-        print("Output is longer than expected!")
-    elif len(output) < len(expected):
-        longer = expected
-        shorter = output
-        print("Output is shorter than expected!")
-    else:
-        print("Output is SAME LEN to expected!")
-        longer = output
-        shorter = expected
-    longer_res = set()
-    for element in longer:
-        if element not in shorter:
-            longer_res.add(tuple(element))
-
-    shorter_res = set()
-    for element in shorter:
-        if element not in longer:
-            shorter_res.add(tuple(element))
-    return longer_res, shorter_res
-
-
-# test show difference
-# print(showDifference([(1, 1), (1, 2)], [(2, 2), (3, 3), (1, 1)]))
-# print(showDifference([[1, 1], [1, 2]], [[2, 2], [3, 3], [1, 1]]))
-
-
 def calculateDistance(point1, point2):
     x1, y1 = point1
     x2, y2 = point2
-    return round(np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2), ROUND)
+    return round(np.sqrt((x1 - x2)**2 + (y1 - y2)**2), ROUND)
 
 
 def calculateCosine(point, origin):
@@ -64,14 +25,6 @@ def calculateCosine(point, origin):
     if y1 == y0:
         return 1.0
     return round((x1 - x0) / calculateDistance(point, origin), ROUND)
-
-
-# def countNumberOfSameY(in_array, y):
-#     count = 0
-#     for element in in_array:
-#         if element[1] == y:
-#             count += 1
-# return count
 
 
 def countNumberOfSameCosine(in_array, origin):
@@ -110,7 +63,9 @@ def grahamScan(in_array):
         return in_array
 
     # patch4 - step 0:
-    in_array = [tuple([_[0] * MULTIPLYER, _[1] * MULTIPLYER]) for _ in in_array]
+    in_array = [
+        tuple([_[0] * MULTIPLYER, _[1] * MULTIPLYER]) for _ in in_array
+    ]
     # step 1: find origin
     sorted_origin = sorted(in_array, key=lambda x: (x[1], x[0]))
     origin = sorted_origin[0]
@@ -121,50 +76,45 @@ def grahamScan(in_array):
     # step 2: sort the remaining array other than the origin point
     remaining_points = sorted(
         sorted_origin[1:],
-        key=lambda x: (-calculateCosine(x, origin), -calculateDistance(x, origin)),
+        key=lambda x:
+        (-calculateCosine(x, origin), -calculateDistance(x, origin)),
     )
     num = countNumberOfSameCosine(remaining_points, origin)
 
     # third patch: now we fix to the correct order.
     first_part = remaining_points[:num]
     second_part = remaining_points[num:]
-    combined_points = (
-        [origin]
-        + sorted(first_part, key=lambda x: calculateDistance(x, origin))
-        + second_part
-    )
-    # import pdb
+    combined_points = ([origin] + sorted(
+        first_part, key=lambda x: calculateDistance(x, origin)) + second_part)
 
-    # pdb.set_trace()
     assert len(combined_points) == len(in_array)
     if DEBUG:
         print(f"Amount of same cos value = {num}.")
         print(f"sorted remaining list = {remaining_points}")
         print(f"final combined list = {combined_points}")
-    # import pdb
-
-    # pdb.set_trace()
     # cosine is a decreasing function from 0 to pi, thus negative sign
     # and we want the fartherest distance if same angle, thus the negative sign.
 
     # step 3: managing the stack to find our final results.
     stack = combined_points[:3]
-    # stack.append(combined_points[0])
-    # stack.append(combined_points[1])
-    # stack.append(combined_points[2])
     if DEBUG:
         print(f"stack initialized = {stack}.")
     for i in range(3, len(combined_points)):
         while True:
             cur_point = combined_points[i]
-            old_vector = [stack[-1][0] - stack[-2][0], stack[-1][1] - stack[-2][1]]
-            new_vector = [cur_point[0] - stack[-1][0], cur_point[1] - stack[-1][1]]
+            old_vector = [
+                stack[-1][0] - stack[-2][0], stack[-1][1] - stack[-2][1]
+            ]
+            new_vector = [
+                cur_point[0] - stack[-1][0], cur_point[1] - stack[-1][1]
+            ]
             if np.cross(old_vector, new_vector) < 0:  # neg cross = clock-wise
                 if DEBUG:
                     print(
                         f"clock wise, current point = {cur_point}, we pop value = {stack[-1]} out from stack."
                     )
-                    print(f"current last 5 elements of the stack = {stack[-5:]}")
+                    print(
+                        f"current last 5 elements of the stack = {stack[-5:]}")
                 stack.pop(-1)
             else:
                 stack.append(cur_point)
@@ -172,11 +122,15 @@ def grahamScan(in_array):
                     print(
                         f"counter clock wise, good, we add current point = {cur_point}"
                     )
-                    print(f"current last 5 elements of the stack = {stack[-5:]}")
+                    print(
+                        f"current last 5 elements of the stack = {stack[-5:]}")
                 break
 
     # patch4: step last, before output, we need to scale back
-    stack = [tuple([int(_[0] / MULTIPLYER), int(_[1] / MULTIPLYER)]) for _ in stack]
+    stack = [
+        tuple([int(_[0] / MULTIPLYER),
+               int(_[1] / MULTIPLYER)]) for _ in stack
+    ]
     return stack
 
 
@@ -214,3 +168,48 @@ print(diff[1], "hum1")
 
 # plotAllPoints(array)
 
+
+def plotAllPoints(in_array):
+    Xs = [_[0] * 10 for _ in in_array]
+    Ys = [_[1] * 10 for _ in in_array]
+    plt.scatter(Xs, Ys)
+    for i in range(len(Xs)):
+        plt.text(Xs[i] + 0.1, Ys[i] - 0.1, f"({Xs[i]}, {Ys[i]})")
+    plt.show()
+
+
+def showDifference(output, expected):
+    if len(output) > len(expected):
+        longer = output
+        shorter = expected
+        print("Output is longer than expected!")
+    elif len(output) < len(expected):
+        longer = expected
+        shorter = output
+        print("Output is shorter than expected!")
+    else:
+        print("Output is SAME LEN to expected!")
+        longer = output
+        shorter = expected
+    longer_res = set()
+    for element in longer:
+        if element not in shorter:
+            longer_res.add(tuple(element))
+
+    shorter_res = set()
+    for element in shorter:
+        if element not in longer:
+            shorter_res.add(tuple(element))
+    return longer_res, shorter_res
+
+
+# test show difference
+# print(showDifference([(1, 1), (1, 2)], [(2, 2), (3, 3), (1, 1)]))
+# print(showDifference([[1, 1], [1, 2]], [[2, 2], [3, 3], [1, 1]]))
+
+# def countNumberOfSameY(in_array, y):
+#     count = 0
+#     for element in in_array:
+#         if element[1] == y:
+#             count += 1
+# return count
