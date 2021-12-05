@@ -111,10 +111,6 @@ def buildTrainRideGraph():
     return tmp
 
 
-tmp = buildTrainRideGraph()
-if DEBUG: print(json.dumps(tmp.graph, sort_keys=True, indent=4))
-
-
 def find_index_minValue(all_index_set, seen_index_set, distance_list):
     """
     all_index_set: a set with all the initial indexs {1,2,3...}
@@ -134,12 +130,15 @@ def find_index_minValue(all_index_set, seen_index_set, distance_list):
     return min_value_index
 
 
-def dijkstra(graph, source="vancouver", debug=False):
+def dijkstra(graph, source="vancouver", DEBUG=False):
     """
     Assuming non-negative edges, dijkstra solves the single-source 
     shortest-paths problem on a weighted directed graph.
-    It maintains a set S of vertices whose final shortest-path 
-    weights from the source s have already been determined.
+
+    Idea: it also uses idea of dp, and maintains two tables. One to
+    remember all the possible shortest path from the source, the 
+    other remember the parent node that provides the current shortest
+    path.
     """
 
     Seen_index = set()  # the S in pesudo code
@@ -156,8 +155,17 @@ def dijkstra(graph, source="vancouver", debug=False):
     distance = [math.inf for _ in range(NUM_VERTEX)]
     prev = [None for _ in range(NUM_VERTEX)]
     distance[mapping[source]] = 0
+    if DEBUG:
+        print("Initializing...")
+        print(f"Init distance to: {distance}")
+        print(f"Init prev to: {prev}\n")
 
     def relax(from_Node, to_Node, weight):
+        """
+        Update the distance by the new minimum, 
+        and if so update the to_node's partent
+        to from node (we remember this info by index).
+        """
         nonlocal distance
         nonlocal prev
         from_index, to_index = mapping.get(from_Node), mapping.get(to_Node)
@@ -171,22 +179,62 @@ def dijkstra(graph, source="vancouver", debug=False):
         node = Q[node_index]
         if DEBUG: print(f"node = {node}")
         for v in graph.get_neighbors(node):
-            if DEBUG: print(f"examing neighbor of {node} = {v}")
             relax(node, v, graph.get_weight(node, v))
+            if DEBUG:
+                print(f"examing neighbor of {node} = {v}")
+                print(f"Update distance to: {distance}")
+                print(f"Update prev to: {prev}")
     if DEBUG: print(distance)
     return distance
 
 
-# dijkstra(tmp, source="vancouver")
+def task1():
+    tmp = buildTrainRideGraph()
+    if DEBUG: print(json.dumps(tmp.graph, sort_keys=True, indent=4))
+    dijkstra(tmp, source="vancouver")
+
 
 # optional
-Q = tmp.get_vertexs()
-cities = set(tmp.get_vertexs())
-for city in cities:
-    tmp_distance = np.array(dijkstra(tmp, source=city))
-    tmp_max = max(tmp_distance)
-    for endCityIndex in np.where(tmp_distance == tmp_max)[0]:
-        print(
-            f"Source={city}, destination={Q[endCityIndex]}, with max distance={tmp_max}."
-        )
-    # break
+def task2():
+    tmp = buildTrainRideGraph()
+    if DEBUG: print(json.dumps(tmp.graph, sort_keys=True, indent=4))
+    Q = tmp.get_vertexs()
+    cities = set(tmp.get_vertexs())
+    for city in cities:
+        tmp_distance = np.array(dijkstra(tmp, source=city))
+        tmp_max = max(tmp_distance)
+        for endCityIndex in np.where(tmp_distance == tmp_max)[0]:
+            print(
+                f"Source={city}, destination={Q[endCityIndex]}, with max distance={tmp_max}."
+            )
+        # break
+
+
+def task3():
+    def buildTmpGraph():
+        tmp = Graph(directional=False)
+        tmp.add_edge("A", "B", 7)
+        tmp.add_edge("A", "D", 5)
+        tmp.add_edge("D", "B", 9)
+        tmp.add_edge("C", "B", 8)
+        tmp.add_edge("C", "E", 5)
+        tmp.add_edge("B", "E", 7)
+        tmp.add_edge("D", "E", 15)
+        tmp.add_edge("D", "F", 6)
+        tmp.add_edge("E", "F", -8)
+        tmp.add_edge("E", "G", 9)
+        tmp.add_edge("G", "F", 11)
+        return tmp
+
+    tmp = buildTmpGraph()
+    import pdb
+
+    pdb.set_trace()
+    print(tmp.get_vertexs())
+    # if DEBUG: print(json.dumps(tmp.graph, sort_keys=True, indent=4))
+    return dijkstra(tmp, source="G", DEBUG=True)
+
+
+task3 = task3()
+
+print(task3)

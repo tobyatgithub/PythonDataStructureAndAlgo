@@ -24,6 +24,19 @@ class Graph:
                 for v2, weight in iterable[v1].items():
                     self.add_edge(v1, v2, weight)
 
+    def __repr__(self):
+        if self._size == 0:
+            print("This is an empty graph.")
+        return str(self.graph)
+
+    def __str__(self):
+        if self._size == 0:
+            return "This is an empty graph."
+        return str(self.graph)
+
+    def __len__(self):
+        return self._size
+
     def add_vertex(self, val):
         if not self.has_vertex(val):
             self.graph[val] = {}
@@ -47,19 +60,6 @@ class Graph:
             self.graph[v2][v1] = weight
         return self
 
-    def __repr__(self):
-        if self._size == 0:
-            print("This is an empty graph.")
-        print(self.graph)
-
-    def __str__(self):
-        if self._size == 0:
-            return "This is an empty graph."
-        return str(self.graph)
-
-    def __len__(self):
-        return self._size
-
     def has_vertex(self, val):
         """
         checks for a key in the graph
@@ -82,3 +82,11 @@ class Graph:
             print(f'Input value {val} is not in this graph.')
             return {}
         return self.graph[val]
+
+    def get_edges(self):
+        """
+        Return a list of edges in the form of:
+        [(from_node, to_node, weight), ()...]
+        """
+        res = []
+        V = self.get_vertexs()
