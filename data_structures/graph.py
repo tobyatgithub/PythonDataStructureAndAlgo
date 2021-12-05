@@ -83,10 +83,16 @@ class Graph:
             return {}
         return self.graph[val]
 
-    def get_edges(self):
+    def get_all_edges(self, sortResult=False):
         """
         Return a list of edges in the form of:
         [(from_node, to_node, weight), ()...]
         """
-        res = []
+        res = set()
         V = self.get_vertexs()
+        for vertex in V:
+            for neighbor in self.get_neighbors(vertex):
+                res.add((vertex, neighbor, self.get_weight(vertex, neighbor)))
+        if sortResult:
+            res = sorted(res, key=lambda x: (x[0],x[1]))
+        return list(res)
