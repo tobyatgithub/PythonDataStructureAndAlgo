@@ -22,6 +22,8 @@ def bellmanFord(graph: Graph, source: str, DEBUG: bool = False) -> list:
     Process:
     One major difference of bellman and dijkstra is that bellman
     update the dp table by iterating through every edge.
+
+    Complexity: O((V+E)LogV) (with the use of Fibonacci heap)
     """
     def relax(from_Node, to_Node, weight):
         """
@@ -49,9 +51,26 @@ def bellmanFord(graph: Graph, source: str, DEBUG: bool = False) -> list:
     distance = [math.inf for _ in range(NUM_VERTEX)]
     prev = [None for _ in range(NUM_VERTEX)]
     distance[mapping[source]] = 0
+    if DEBUG:
+        print("Initializing...")
+        print(f"Init distance to: {distance}")
+        print(f"Init prev to: {prev}\n")
 
-    for edge in graph.get_edges():
-    return []
+    for i in range(NUM_VERTEX):
+        for edge_info in graph.get_all_edges():
+            from_node, to_node, weight = edge_info
+            relax(from_node, to_node, weight)
+            if DEBUG:
+                print(f"examing edge from: [{from_node}] to:" +
+                      f" [{to_node}] with weight = [{weight}]")
+        if DEBUG:
+            print("\n")
+            print(f"Update distance to: {distance}")
+            print(f"Update prev to: {prev}")
+    if DEBUG:
+        print(", ".join([f"{Q[i]} : {distance[i]}"
+                         for i in range(NUM_VERTEX)]))
+    return distance, prev
 
 
 def task1():
@@ -73,4 +92,7 @@ def task1():
     tmp = buildTmpGraph()
     print(tmp.get_vertexs())
     # if DEBUG: print(json.dumps(tmp.graph, sort_keys=True, indent=4))
-    return bellhamFord(tmp, source="A", DEBUG=True)
+    return bellmanFord(tmp, source="A", DEBUG=True)
+
+
+result = task1()
