@@ -139,6 +139,14 @@ def dijkstra(graph, source="vancouver", DEBUG=False):
     remember all the possible shortest path from the source, the 
     other remember the parent node that provides the current shortest
     path.
+
+    The main difference between dijkstra and bellman is that 
+    dijkstra updates the dp table by vertex. i.e. each time we pick
+    one of the unseen vertex that has the smallest distance value from
+    our source, and expand from there.
+
+    Complexity: O(V^2), it can be reduced to O(E log V) 
+    with the help of a binary heap
     """
 
     Seen_index = set()  # the S in pesudo code
@@ -185,7 +193,7 @@ def dijkstra(graph, source="vancouver", DEBUG=False):
                 print(f"Update distance to: {distance}")
                 print(f"Update prev to: {prev}")
     if DEBUG: print(distance)
-    return distance
+    return distance, prev
 
 
 def task1():
